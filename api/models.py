@@ -16,6 +16,9 @@ class User(AbstractBaseUser, PermissionsMixin):
   USERNAME_FIELD = 'phone'
   REQUIRED_FIELDS = []
 
+  def __str__(self):
+    return "%s - %s" % (self.phone.as_national, self.name)
+
   class Meta:
     verbose_name = _('user')
     verbose_name_plural = _('users')
