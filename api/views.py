@@ -1,7 +1,8 @@
 from rest_framework.views import APIView
 from .models import User
 from .serializer import UserSerializer
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
 
 from rest_framework import mixins
 from rest_framework import generics
@@ -16,6 +17,17 @@ class UserVerify(mixins.RetrieveModelMixin, generics.GenericAPIView):
 
 class Create(mixins.CreateModelMixin, generics.GenericAPIView):
   serializer_class = UserSerializer
-
   def post(self, request, *args, **kwargs):
     return self.create(request, *args, **kwargs)
+
+class Update(mixins.UpdateModelMixin, generics.GenericAPIView):
+  # authentication_classes = (TokenAuthentication,)
+  permissioon_classes = (IsAuthenticated,)
+  serializer_class = UserSerializer
+  queryset = User.objects.all()
+
+  def get_object(self):
+    return self.request.user
+    
+  def post(self, request, *args, **kwargs):
+    return self.partial_update(request, *args, **kwargs)
