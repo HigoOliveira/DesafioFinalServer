@@ -36,6 +36,13 @@ class UserSerializer(serializers.ModelSerializer):
     fields = ('phone', 'name', 'password', 'password_confirm')
     
 class EventSerializer(serializers.ModelSerializer):
+
+  # def create(self, validated_data):
+  #   event = super(EventSerializer, self).create(validated_data)
+  #   event.user = 
+  #   event.save()
+
+  #   return event
   class Meta:
     model = Event
     fields = '__all__'

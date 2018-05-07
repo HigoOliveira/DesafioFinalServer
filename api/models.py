@@ -24,6 +24,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     verbose_name_plural = _('users')
 
 class Event(models.Model):
+  user = models.ForeignKey(User, on_delete=models.CASCADE)
   name = models.CharField(max_length=255)
   where = models.CharField(max_length=255)
   datetime = models.DateTimeField()

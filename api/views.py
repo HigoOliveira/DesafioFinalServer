@@ -4,8 +4,8 @@ from .serializer import UserSerializer, EventSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
-from rest_framework import mixins
-from rest_framework import generics
+from rest_framework import status, mixins, generics
+from rest_framework.response import Response
 
 class UserVerify(mixins.RetrieveModelMixin, generics.GenericAPIView):
   queryset = User.objects.all()
@@ -35,5 +35,10 @@ class CreateEvent(mixins.CreateModelMixin, generics.GenericAPIView):
   permissioon_classes = (IsAuthenticated,)
   serializer_class = EventSerializer
   def post(self, request, *args, **kwargs):
-    print(request)
-    return self.create(request, *args, **kwargs)
+    data = request.data.copy()
+    data['user'] = self.request.user.id
+    serializer = self.get_serializer(data=data)
+    serializer.is_valid(raise_exception=True)
+    self.perform_create(serializer)
+    headers = self.get_success_headers(serializer.data)
+    return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
