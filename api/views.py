@@ -1,6 +1,6 @@
 from rest_framework.views import APIView
 from .models import User
-from .serializer import UserSerializer
+from .serializer import UserSerializer, EventSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 
@@ -21,7 +21,6 @@ class Create(mixins.CreateModelMixin, generics.GenericAPIView):
     return self.create(request, *args, **kwargs)
 
 class Update(mixins.UpdateModelMixin, generics.GenericAPIView):
-  # authentication_classes = (TokenAuthentication,)
   permissioon_classes = (IsAuthenticated,)
   serializer_class = UserSerializer
   queryset = User.objects.all()
@@ -31,3 +30,10 @@ class Update(mixins.UpdateModelMixin, generics.GenericAPIView):
     
   def post(self, request, *args, **kwargs):
     return self.partial_update(request, *args, **kwargs)
+
+class CreateEvent(mixins.CreateModelMixin, generics.GenericAPIView):
+  permissioon_classes = (IsAuthenticated,)
+  serializer_class = EventSerializer
+  def post(self, request, *args, **kwargs):
+    print(request)
+    return self.create(request, *args, **kwargs)

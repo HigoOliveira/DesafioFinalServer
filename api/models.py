@@ -22,3 +22,8 @@ class User(AbstractBaseUser, PermissionsMixin):
   class Meta:
     verbose_name = _('user')
     verbose_name_plural = _('users')
+
+class Event(models.Model):
+  name = models.CharField(max_length=255)
+  where = models.CharField(max_length=255)
+  datetime = models.DateTimeField()
