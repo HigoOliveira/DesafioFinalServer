@@ -10,4 +10,6 @@ urlpatterns = [
     path('signup', views.Create.as_view()),
     path('user/update', views.Update.as_view()),
     path('event/create', views.CreateEvent.as_view()),
+    path('event/list', views.ListEvent.as_view()),
+    path('event/delete/<int:pk>', views.DeleteEvent.as_view()),
 ]

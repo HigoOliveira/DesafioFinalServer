@@ -1,5 +1,5 @@
 from rest_framework.views import APIView
-from .models import User
+from .models import User, Event
 from .serializer import UserSerializer, EventSerializer
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
@@ -42,3 +42,24 @@ class CreateEvent(mixins.CreateModelMixin, generics.GenericAPIView):
     self.perform_create(serializer)
     headers = self.get_success_headers(serializer.data)
     return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+class ListEvent(mixins.ListModelMixin, generics.GenericAPIView):
+  permissioon_classes = (IsAuthenticated,)
+  queryset = Event.objects.all()
+  serializer_class = EventSerializer
+
+  def get_queryset(self):
+    queryset = super(ListEvent, self).get_queryset()
+    return queryset.filter(user=self.request.user)
+
+  def get(self, request, *args, **kwargs):
+    return self.list(request, *args, **kwargs)
+
+class DeleteEvent(mixins.DestroyModelMixin, generics.GenericAPIView):
+  serializer_class = EventSerializer
+  permissioon_classes = (IsAuthenticated,)
+  queryset = Event.objects.all()
+
+  def post(self, request, *args, **kwargs):
+    print(request.POST)
+    return self.destroy(request, *args, **kwargs)
